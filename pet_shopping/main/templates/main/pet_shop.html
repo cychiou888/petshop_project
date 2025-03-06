@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寵物預購系統</title>
+    <script src="{% static 'js/pet_shop.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pet_shop.css' %}">
+</head>
+<body>
+    <!-- Header 部分 -->
+    {% include 'main/header.html' %}
+    
+    <!-- 主要內容 -->
+    <main class="container">
+        <h1>寵物預購系統</h1>
+        
+        <!-- 分類選項 -->
+        <div class="category-section">
+            <button class="category-btn active" data-category="all">所有寵物</button>
+            <button class="category-btn" data-category="dogs">狗狗</button>
+            <button class="category-btn" data-category="cats">貓咪</button>
+            <button class="category-btn" data-category="small">小型寵物</button>
+        </div>
+        
+       
+        <div class="pets-grid">
+        
+        </div>
+    </main>
+    
+    <!-- 寵物詳情彈窗 -->
+    <div id="petModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="pet-details">
+                <img id="modalImg" src="https://placehold.co/400x300" alt="寵物圖片">
+                <div class="info">
+                    <h2 id="modalName"></h2>
+                    <p id="modalPrice" class="price"></p>
+                    <div class="details">
+                        <p><strong>品種:</strong> <span id="modalBreed"></span></p>
+                        <p><strong>年齡:</strong> <span id="modalAge"></span></p>
+                        <p><strong>疫苗:</strong> <span id="modalVaccine"></span></p>
+                    </div>
+                    <p id="modalDesc" class="description"></p>
+                    <button class="reserve-btn">立即預購</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer 部分 -->
+    {% include 'main/footer.html' %}
+    
+    
+</body>
+
+</html>

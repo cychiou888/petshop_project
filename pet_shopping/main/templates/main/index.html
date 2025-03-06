@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寵物店</title>
+    <script src="{% static 'js/carousel.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+</head>
+<body>
+    {% include 'main/header.html' %}
+
+    <main>
+        <div class="carousel">
+          <div class="carousel-container">
+            <div class="slide active">
+              <img src="{% static 'images/bull_car.jpg' %}" alt="圖片 1">
+            </div>
+            <div class="slide">
+              <img src="{% static 'images/collie_car.jpg' %}" alt="圖片 2">
+            </div>
+            <div class="slide">
+              <img src="{% static 'images/shiba_car.jpg' %}" alt="圖片 3">
+            </div>
+          </div>
+          <div class="carousel-controls">
+            <span class="prev">&#10094;</span>
+            <span class="next">&#10095;</span>
+          </div>
+        </div>
+      </main>
+      {% include 'main/footer.html' %}
+
+</body>
+</html>

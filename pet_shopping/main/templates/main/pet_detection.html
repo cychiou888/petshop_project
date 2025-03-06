@@ -1,0 +1,286 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寵物辨識系統</title>
+    <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pet_shop.css' %}">
+    <style>
+        .upload-section {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .upload-section input[type="file"] {
+            display: none;
+        }
+        
+        .upload-section label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        #preview {
+            max-width: 300px;
+            max-height: 300px;
+            margin: 0 auto;
+            display: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fff3cd;
+            color: #856404;
+            border-radius: 4px;
+        }
+        
+        .detection-result {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .detected-pet {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+        }
+        
+        .detected-pet img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+        
+        .detected-info h3 {
+            margin-top: 0;
+            color: #343a40;
+        }
+        
+        .confidence {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .similar-pets-title {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'main/header.html' %}
+    
+    <main class="container">
+        <h1>寵物辨識系統</h1>
+        <p>上傳一張寵物圖片，我們將辨識出寵物種類並為您推薦相似的寵物！</p>
+        
+        <div class="upload-section">
+            <h2>上傳寵物圖片</h2>
+            <input type="file" id="imageInput" accept="image/*">
+            <label for="imageInput">選擇圖片</label>
+            <img id="preview" src="" alt="預覽圖">
+        </div>
+        
+        <div class="loading">
+            正在辨識中...請稍候...
+        </div>
+        
+        <div class="detection-result" id="detectionResult">
+            <div class="detected-pet">
+                <img id="detectedImage" src="" alt="辨識圖片">
+                <div class="detected-info">
+                    <h3>辨識結果</h3>
+                    <div class="confidence" id="confidenceText">可信度: 0%</div>
+                    <p id="detectedClass">未檢測到寵物</p>
+                </div>
+            </div>
+            
+            <h2 class="similar-pets-title">推薦相似寵物</h2>
+            <div class="pets-grid" id="similarPets">
+                <!-- 相似寵物卡片會在這裡動態生成 -->
+            </div>
+        </div>
+    </main>
+    
+    <!-- 寵物詳情彈窗 -->
+    <div id="petModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="pet-details">
+                <img id="modalImg" src="https://placehold.co/400x300" alt="寵物圖片">
+                <div class="info">
+                    <h2 id="modalName"></h2>
+                    <p id="modalPrice" class="price"></p>
+                    <div class="details">
+                        <p><strong>品種:</strong> <span id="modalBreed"></span></p>
+                        <p><strong>年齡:</strong> <span id="modalAge"></span></p>
+                        <p><strong>疫苗:</strong> <span id="modalVaccine"></span></p>
+                    </div>
+                    <p id="modalDesc" class="description"></p>
+                    <button class="reserve-btn">立即預購</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% include 'main/footer.html' %}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('imageInput');
+            const preview = document.getElementById('preview');
+            const loading = document.querySelector('.loading');
+            const detectionResult = document.getElementById('detectionResult');
+            const detectedImage = document.getElementById('detectedImage');
+            const confidenceText = document.getElementById('confidenceText');
+            const detectedClass = document.getElementById('detectedClass');
+            const similarPets = document.getElementById('similarPets');
+            
+            // 寵物詳情模態窗相關元素
+            const modal = document.getElementById('petModal');
+            const modalImg = document.getElementById('modalImg');
+            const modalName = document.getElementById('modalName');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalBreed = document.getElementById('modalBreed');
+            const modalAge = document.getElementById('modalAge');
+            const modalVaccine = document.getElementById('modalVaccine');
+            const modalDesc = document.getElementById('modalDesc');
+            
+            // 監聽文件上傳
+            imageInput.addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                // 顯示預覽圖片
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+                
+                // 準備上傳數據
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                // 顯示載入畫面
+                loading.style.display = 'block';
+                detectionResult.style.display = 'none';
+                
+                try {
+                    // 發送圖片到後端進行辨識
+                    const response = await fetch('/api/predict/', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    loading.style.display = 'none';
+                    
+                    if (result.success) {
+                        // 更新辨識結果
+                        detectedImage.src = result.image_url;
+                        confidenceText.textContent = `可信度: ${(result.confidence * 100).toFixed(2)}%`;
+                        detectedClass.textContent = `辨識結果: ${result.detected_class}`;
+                        
+                        // 生成相似寵物卡片
+                        renderSimilarPets(result.similar_pets);
+                        
+                        // 顯示結果區塊
+                        detectionResult.style.display = 'block';
+                    } else {
+                        alert(result.message || '無法辨識圖片，請嘗試其他圖片');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('發生錯誤，請稍後再試');
+                    loading.style.display = 'none';
+                }
+            });
+            
+            // 顯示相似寵物卡片
+            function renderSimilarPets(pets) {
+                similarPets.innerHTML = '';
+                
+                if (!pets || pets.length === 0) {
+                    similarPets.innerHTML = '<p>沒有找到相似的寵物</p>';
+                    return;
+                }
+                
+                pets.forEach(pet => {
+                    const card = document.createElement('div');
+                    card.className = 'pet-card';
+                    card.innerHTML = `
+                        <img src="${pet.image || 'https://placehold.co/300x200'}" alt="${pet.name}">
+                        <div class="pet-info">
+                            <h3>${pet.name}</h3>
+                            <p class="pet-price">${pet.price}</p>
+                            <button class="detail-btn">查看詳情</button>
+                        </div>
+                    `;
+                    
+                    // 添加詳情按鈕點擊事件
+                    card.querySelector('.detail-btn').addEventListener('click', function() {
+                        showPetDetails(pet);
+                    });
+                    
+                    similarPets.appendChild(card);
+                });
+            }
+            
+            // 顯示寵物詳情
+            function showPetDetails(pet) {
+                modalImg.src = pet.image || "https://placehold.co/400x300";
+                modalName.textContent = pet.name;
+                modalPrice.textContent = pet.price;
+                modalDesc.textContent = pet.description;
+                modalBreed.textContent = pet.breed;
+                modalAge.textContent = pet.age;
+                modalVaccine.textContent = pet.vaccine;
+                
+                modal.style.display = 'block';
+            }
+            
+            // 關閉模態窗
+            document.querySelector('.close').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // 點擊模態窗外部關閉
+            window.addEventListener('click', function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

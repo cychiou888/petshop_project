@@ -1,0 +1,41 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/footer.css' %}">
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-about">
+            <h3>寵物預購系統</h3>
+            <div class="footer-logo">
+                <a href="{% url 'pet_shop' %}">
+                    <img src="{% static 'images/pig_icon.webp' %}" alt="bird">
+                </a>
+            </div>
+        </div>
+        <div class="footer-about">
+            <h3>寵物圖片辨識</h3>
+            <div class="footer-logo">
+                <a href="{% url 'picture_analyzer' %}">
+                    <img src="{% static 'images/pig_icon.webp' %}" alt="bird">
+                </a>
+            </div>
+        </div>
+        <div class="footer-links">
+            <h3>快速連結</h3>
+            <ul>
+                <li><a href="{% url 'index' %}">首頁</a></li>
+                <li><a href="{% url 'pet_shop' %}">寵物預購系統</a></li>
+                <li><a href="{% url 'picture_analyzer' %}">寵物圖片辨識</a></li>
+                <li><a href="{% url 'about_us' %}">關於我們</a></li>
+                <li><a href="#">聯絡我們</a></li>
+            </ul>
+        </div>
+        <div class="footer-contact">
+            <h3>聯絡我們</h3>
+            <p>Email: <a href="mailto:cychiou888@gmail.com">cychiou888@gmail.com</a></p>
+            <p>電話: 0908965088</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 寵物店</p>
+    </div>
+</footer>
+

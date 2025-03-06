@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <title>聯絡我們</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+ 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .contact-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .intro {
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            margin: 1.5rem 0;
+            color: #2a2a2a;
+            font-size: 1.8rem;
+        }
+        
+        .qr-codes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .qr-item {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            padding: 1.5rem;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .qr-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .qr-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .qr-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .qr-desc {
+            color: #666;
+        }
+        
+        footer {
+            background-color: #2a2a2a;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .qr-codes {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .qr-item {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'main/header.html' %}
+    
+    <div class="container">
+        <section class="contact-section">
+            <div class="intro">
+                <h2>歡迎與我們聯繫</h2>
+                <p>掃描下方二維碼</p>
+            </div>
+            
+            <div class="qr-codes">
+                <div class="qr-item">
+                    <img src="{% static 'images/cychiouyyy_qr.png' %}" alt="Instagram QR Code" id="instagram-qr">
+                    <h3 class="qr-title">Instagram</h3>
+                    <p class="qr-desc">掃描二維碼，關注我們的Instagram帳號 CYCHIOUYY</p>
+                </div>
+                
+                <div class="qr-item">
+                    <img src="{%static 'images\S__15908867.jpg' %}" alt="LINE QR Code" id="line-qr">
+                    <h3 class="qr-title">LINE</h3>
+                    <p class="qr-desc">掃描二維碼，添加我們的LINE官方帳號</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+
+    <script>   
+        document.getElementById('instagram-qr').src = "{% static 'images/cychiouyyy_qr.png' %}";
+        document.getElementById('line-qr').src = "{%static 'images\S__15908867.jpg' %}";
+    </script>
+     {% include 'main/footer.html' %}
+</body>
+</html>

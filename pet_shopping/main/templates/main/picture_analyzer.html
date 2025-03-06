@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寵物種類辨識系統</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+    <script src="{% static 'js/bird_pic.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/bird_pic.css' %}">
+    <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
+    {% include 'main/header.html' %}
+    <div class="container">
+        <h1>寵物種類辨識系統</h1>
+        
+        <div class="upload-section">
+            <h2>上傳圖片</h2>
+            <input type="file" id="imageInput" accept="image/*">
+            <label for="imageInput">選擇圖片</label>
+            <img id="preview" src="" alt="預覽圖">
+        </div>
+        <div class="loading">
+            正在辨識中...請稍候...
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <h2>辨識結果</h2>
+            <p id="resultText"></p>
+            
+            <div class="bird-info">
+                <div class="bird-image">
+                    <img id="birdImage" src="" alt="鳥類圖片">
+                </div>
+                <div class="bird-description">
+                    <h3 id="birdName"></h3>
+                    <p id="birdDescription"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    {% include 'main/footer.html' %}
+
+</body>
+</html>

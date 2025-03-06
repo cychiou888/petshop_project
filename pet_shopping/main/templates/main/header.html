@@ -1,0 +1,25 @@
+{% load static %}
+<header>
+    <nav class="navbar">
+      <div class="logo">
+        <a href="{% url 'index' %}"></a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="{% url 'index' %}">首頁</a></li>
+        <li id="symptom"><a href="{% url 'pet_shop' %}">寵物預購系統</a></li>
+        <li id="symptom2"><a href="{% url 'picture_analyzer' %}">寵物圖片辨識</a></li>
+        <li id="symptom2"><a href="{% url 'pet_detection' %}">寵物圖片辨識</a></li>
+        <li><a href="{% url 'about_us' %}">關於我</a></li>
+        <li><a href="{% url 'contact' %}">聯絡我們</a></li>
+      </ul>
+      <div class="nav-buttons">
+        {% if is_logged_in %}
+            <span class="user-name">{{ full_name }}</span>
+            <a href="{% url 'logout' %}" class="btn btn-signup">登出</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-login">登入</a>
+            <a href="{% url 'login' %}" class="btn btn-signup">註冊</a>
+        {% endif %}
+      </div>
+    </nav>
+</header>
